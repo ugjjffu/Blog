@@ -6,30 +6,26 @@ import Navbar from '@/components/Navbar';
 import { getCategories, getPostsByCategory } from '@/lib/posts';
 import { notFound } from 'next/navigation';
 
-/* 1️⃣ 参数类型：Promise */
+/* 参数类型：Promise */
 type Props = {
   params: Promise<{ category: string }>;
 };
 
-/* 2️⃣ 预渲染哪些分类页 */
+/* 预渲染哪些分类页 */
 export async function generateStaticParams(): Promise<Array<{ category: string }>> {
   const cats = getCategories().filter(c => c !== '所有文章');
-  // 把空格替换成 -，保持 URL 友好
   return cats.map(c => ({ category: c.replace(/\s+/g, '-') }));
 }
 
 export default async function CategoryPage({ params }: Props) {
-  /* 3️⃣ 解开 Promise */
   const { category } = await params;
 
-  /* 4️⃣ URL 解码 & 首字母大写 */
   const decodedCategory = decodeURIComponent(category.replace(/-/g, ' '));
   const formattedCategory = decodedCategory
     .split(' ')
     .map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
     .join(' ');
 
-  /* 5️⃣ 校验分类是否存在 */
   const categories = getCategories();
   if (!categories.includes(formattedCategory)) {
     notFound();
