@@ -1,3 +1,4 @@
+// app/category/[category]/page.tsx
 import BlogCard from '@/components/BlogCard';
 import BlogHeader from '@/components/BlogHeader';
 import CategoryList from '@/components/CategoryList';
@@ -5,22 +6,32 @@ import Navbar from '@/components/Navbar';
 import { getCategories, getPostsByCategory } from '@/lib/posts';
 import { notFound } from 'next/navigation';
 
-interface CategoryPageProps {
-  params: {
-    category: string;
-  };
+/* 1️⃣ 参数类型：Promise */
+type Props = {
+  params: Promise<{ category: string }>;
+};
+
+/* 2️⃣ 预渲染哪些分类页 */
+export async function generateStaticParams(): Promise<Array<{ category: string }>> {
+  const cats = getCategories().filter(c => c !== '所有文章');
+  // 把空格替换成 -，保持 URL 友好
+  return cats.map(c => ({ category: c.replace(/\s+/g, '-') }));
 }
 
-export default function CategoryPage({ params }: CategoryPageProps) {
-  const decodedCategory = decodeURIComponent(params.category.replace(/-/g, ' '));
+export default async function CategoryPage({ params }: Props) {
+  /* 3️⃣ 解开 Promise */
+  const { category } = await params;
+
+  /* 4️⃣ URL 解码 & 首字母大写 */
+  const decodedCategory = decodeURIComponent(category.replace(/-/g, ' '));
   const formattedCategory = decodedCategory
     .split(' ')
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
     .join(' ');
 
+  /* 5️⃣ 校验分类是否存在 */
   const categories = getCategories();
-  const categoryExists = categories.includes(formattedCategory);
-  if (!categoryExists) {
+  if (!categories.includes(formattedCategory)) {
     notFound();
   }
 
@@ -33,15 +44,15 @@ export default function CategoryPage({ params }: CategoryPageProps) {
         <BlogHeader />
         <div className="flex flex-col md:flex-row gap-8">
           <div className="md:w-1/4">
-            <CategoryList 
-              categories={categories.filter(c => c !== '所有文章')} 
+            <CategoryList
+              categories={categories.filter(c => c !== '所有文章')}
               activeCategory={formattedCategory}
             />
           </div>
           <div className="md:w-3/4">
             <h2 className="text-2xl font-bold mb-6">{formattedCategory}</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredPosts.map((post) => (
+              {filteredPosts.map(post => (
                 <BlogCard
                   key={post.id}
                   title={post.title}
