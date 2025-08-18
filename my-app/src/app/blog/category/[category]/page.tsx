@@ -1,3 +1,4 @@
+// app/category/[category]/page.tsx
 import BlogCard from '@/components/BlogCard';
 import BlogHeader from '@/components/BlogHeader';
 import CategoryList from '@/components/CategoryList';
@@ -5,7 +6,10 @@ import Navbar from '@/components/Navbar';
 import { getCategories, getPostsByCategory } from '@/lib/posts';
 import { notFound } from 'next/navigation';
 
+
 /* 1️⃣ 参数类型改成 Promise */
+
+/* 参数类型：Promise */
 type Props = {
   params: Promise<{ category: string }>;
 };
@@ -21,6 +25,15 @@ export async function generateStaticParams(): Promise<Array<{ category: string }
 
 export default async function CategoryPage({ params }: Props) {
   const { category } = await params;              // 3️⃣ 解开 Promise
+/* 预渲染哪些分类页 */
+export async function generateStaticParams(): Promise<Array<{ category: string }>> {
+  const cats = getCategories().filter(c => c !== '所有文章');
+  return cats.map(c => ({ category: c.replace(/\s+/g, '-') }));
+}
+
+export default async function CategoryPage({ params }: Props) {
+  const { category } = await params;
+
   const decodedCategory = decodeURIComponent(category.replace(/-/g, ' '));
   const formattedCategory = decodedCategory
     .split(' ')
