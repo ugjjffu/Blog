@@ -1,0 +1,119 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Markdown 内容样式 */
+.markdown-content h1 {
+  @apply text-3xl font-bold my-6;
+}
+
+.markdown-content h2 {
+  @apply text-2xl font-bold my-5;
+}
+
+.markdown-content h3 {
+  @apply text-xl font-bold my-4;
+}
+
+.markdown-content p {
+  @apply my-4;
+}
+
+.markdown-content ul {
+  @apply list-disc pl-8 my-4;
+}
+
+.markdown-content ol {
+  @apply list-decimal pl-8 my-4;
+}
+
+.markdown-content li {
+  @apply my-1;
+}
+
+.markdown-content a {
+  @apply text-blue-600 hover:underline;
+}
+
+.markdown-content blockquote {
+  @apply border-l-4 border-gray-300 pl-4 italic my-4;
+}
+
+.markdown-content code {
+  @apply bg-gray-100 rounded px-2 py-1;
+}
+
+.markdown-content pre {
+  @apply bg-gray-100 p-4 rounded my-4 overflow-x-auto;
+}
+
+/* 强调元素 */
+.markdown-content strong {
+  @apply font-bold;
+}
+
+.markdown-content em {
+  @apply italic;
+}
+
+/* 页面切换过渡效果 */
+.page-transition-wrapper {
+  position: relative;
+  min-height: 100vh;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0.8;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* 提高图片加载性能 */
+img {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* 优化页面滚动 */
+html {
+  scroll-behavior: smooth;
+}
+
+/* 减少布局偏移 */
+* {
+  box-sizing: border-box;
+}
+
+/* 预设图片容器尺寸以减少布局偏移 */
+.image-container {
+  position: relative;
+  overflow: hidden;
+  background-color: #f3f4f6;
+}
