@@ -2,36 +2,25 @@ import { getPostBySlug, getAllPostSlugs } from '@/lib/posts';
 import { notFound } from 'next/navigation';
 import ClientBlogPostPage from './ClientBlogPostPage';
 
-interface BlogPostPageProps {
-  params: {
-    slug: string;
-  };
+/* 1️⃣ 直接复用 Next.js 内置类型 */
+type Props = {
+  params: { slug: string };
+};
+
+/* 2️⃣ generateStaticParams 的返回值类型也补全 */
+export async function generateStaticParams(): Promise<Array<{ slug: string }>> {
+  return getAllPostSlugs().map(p => p.params);
 }
 
-export async function generateStaticParams() {
-  const paths = getAllPostSlugs();
-  return paths.filter(p => p && p.params && p.params.slug);
-}
+export const revalidate = 3600;
+export const dynamicParams = true;
 
-// 使页面转换更平滑的属性
-export const revalidate = 3600; // 设置页面缓存时间
-export const dynamicParams = true; // Allow slugs not generated at build time
+/* 3️⃣ 组件签名 */
+export default async function BlogPostPage({ params }: Props) {
+  if (!params?.slug) notFound();
 
-export default async function BlogPostPage({ params }: BlogPostPageProps) {
-  if (!params || typeof params.slug !== 'string') {
-      console.error("Invalid or missing slug parameter:", params);
-      notFound();
-  }
   const post = getPostBySlug(params.slug);
-  
-  if (!post) {
-    console.log(`Post not found for slug: ${params.slug}`);
-    notFound();
-  }
+  if (!post) notFound();
 
-  return (
-    <ClientBlogPostPage 
-      post={post}
-    />
-  );
+  return <ClientBlogPostPage post={post} />;
 }
