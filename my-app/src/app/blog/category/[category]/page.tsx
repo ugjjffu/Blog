@@ -14,13 +14,13 @@ type Props = {
 /* 预渲染哪些分类页 */
 export async function generateStaticParams(): Promise<Array<{ category: string }>> {
   const cats = getCategories().filter(c => c !== '所有文章');
-  return cats.map(c => ({ category: c.replace(/\s+/g, '-') }));
+  return cats.map(c => ({ category: c?.replace(/\s+/g, '-') }));
 }
 
 export default async function CategoryPage({ params }: Props) {
   const { category } = await params;
 
-  const decodedCategory = decodeURIComponent(category.replace(/-/g, ' '));
+  const decodedCategory = decodeURIComponent(category?.replace(/-/g, ' '));
   const formattedCategory = decodedCategory
     .split(' ')
     .map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
