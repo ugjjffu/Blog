@@ -15,13 +15,13 @@ export async function generateStaticParams(): Promise<Array<{ category: string }
   const categories = getCategories().filter(c => c !== '所有文章');
   /* 把空格替换成 -，确保 URL 合法 */
   return categories.map(c => ({
-    category: c.replace(/\s+/g, '-'),
+    category: c?.replace(/\s+/g, '-'),
   }));
 }
 
 export default async function CategoryPage({ params }: Props) {
   const { category } = await params;              // 3️⃣ 解开 Promise
-  const decodedCategory = decodeURIComponent(category.replace(/-/g, ' '));
+  const decodedCategory = decodeURIComponent(category?.replace(/-/g, ' '));
   const formattedCategory = decodedCategory
     .split(' ')
     .map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
