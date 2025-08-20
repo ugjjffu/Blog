@@ -1,4 +1,5 @@
 import { getAllPostsData, getCategoryStructure, getCategories } from '@/lib/posts';
+import ClientBlogPage from './ClientBlogPage';
 
 export default function BlogPage() {
   // 在服务器端获取数据
@@ -8,6 +9,12 @@ export default function BlogPage() {
   const c=JSON.stringify(blogPosts)+JSON.stringify(categoryStructure)+JSON.stringify(categories);
   if(c){}
   return (
-    <div>123</div>
+    <ClientBlogPage 
+      initialPosts={blogPosts}
+      categoryStructure={categoryStructure}
+      categories={categories}
+    />
   );
 }
+
+export const dynamic = 'force-static'; // 或 'error'
