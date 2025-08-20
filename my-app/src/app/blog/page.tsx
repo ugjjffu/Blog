@@ -1,5 +1,3 @@
-import ClientBlogPage from './ClientBlogPage';
-
 export default function BlogPage() {
   // 在服务器端获取数据
   return (
