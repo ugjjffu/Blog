@@ -14,8 +14,8 @@ export function getAllPostsData(): BlogPost[] {
       .filter(fileName => fileName.endsWith('.md'))
       .map((fileName) => {
         // 从文件名中移除数字前缀 (如 "1-", "2-" 等) 以获取正确的 slug
-        const fileNameWithoutPrefix = fileName.replace(/^\d+-/, '');
-        const slugFromFile = decodeURIComponent(fileNameWithoutPrefix.replace(/\.md$/, ''));
+        const fileNameWithoutPrefix = fileName?.replace(/^\d+-/, '');
+        const slugFromFile = decodeURIComponent(fileNameWithoutPrefix?.replace(/\.md$/, ''));
         const fullPath = path.join(postsDirectory, fileName);
         
         try {
@@ -72,7 +72,7 @@ export function getPostBySlug(slugParam: string): BlogPost | undefined {
     
     // 1. 精确匹配（带或不带数字前缀）
     foundFile = filesInDir.find(f => {
-      const nameWithoutPrefix = f.replace(/^\d+-/, '');
+      const nameWithoutPrefix = f?.replace(/^\d+-/, '');
       return nameWithoutPrefix.toLowerCase() === `${decodedSlug.toLowerCase()}.md`;
     });
     
@@ -87,8 +87,8 @@ export function getPostBySlug(slugParam: string): BlogPost | undefined {
     if (!foundFile) {
       // 尝试所有可能的文件名组合
       for (const file of filesInDir) {
-        const fileNameWithoutExt = file.replace(/\.md$/, '');
-        const fileNameWithoutPrefix = fileNameWithoutExt.replace(/^\d+-/, '');
+        const fileNameWithoutExt = file?.replace(/\.md$/, '');
+        const fileNameWithoutPrefix = fileNameWithoutExt?.replace(/^\d+-/, '');
         
         if (fileNameWithoutPrefix === decodedSlug ||
             encodeURIComponent(fileNameWithoutPrefix) === slugParam ||
