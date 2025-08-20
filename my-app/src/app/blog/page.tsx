@@ -1,4 +1,3 @@
-import { getAllPostsData, getCategoryStructure, getCategories } from '@/lib/posts';
 import ClientBlogPage from './ClientBlogPage';
 
 export default function BlogPage() {
