@@ -5,7 +5,8 @@ export default function BlogPage() {
   const blogPosts = getAllPostsData();
   const categoryStructure = getCategoryStructure();
   const categories = getCategories();
-  
+  const c=JSON.stringify(blogPosts)+JSON.stringify(categoryStructure)+JSON.stringify(categories);
+  if(c){}
   return (
     <div>123</div>
   );
