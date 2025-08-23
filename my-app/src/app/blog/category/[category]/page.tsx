@@ -6,11 +6,25 @@ import Navbar from '@/components/Navbar';
 import { getCategories, getPostsByCategory } from '@/lib/posts';
 import { notFound } from 'next/navigation';
 
+
+/* 1️⃣ 参数类型改成 Promise */
+
 /* 参数类型：Promise */
 type Props = {
   params: Promise<{ category: string }>;
 };
 
+/* 2️⃣ 预渲染哪些分类页 */
+export async function generateStaticParams(): Promise<Array<{ category: string }>> {
+  const categories = getCategories().filter(c => c !== '所有文章');
+  /* 把空格替换成 -，确保 URL 合法 */
+  return categories.map(c => ({
+    category: c.replace(/\s+/g, '-'),
+  }));
+}
+
+export default async function CategoryPage({ params }: Props) {
+  const { category } = await params;              // 3️⃣ 解开 Promise
 /* 预渲染哪些分类页 */
 export async function generateStaticParams(): Promise<Array<{ category: string }>> {
   const cats = getCategories().filter(c => c !== '所有文章');
